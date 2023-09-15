@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="封装每个对象都包含它能进行操作所需要的所有信息，这个特性称为封装，因此对象不必依赖其他对象来完成自己的操作。  Tips：1.良好的封装能减少耦合。2.类内部的实现可以自由地修改。3.类具有清晰的对外接口。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面向对象基础">
+<meta property="og:url" content="http://example.com/2021/11/26/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="AquiteamoKsq Blog">
+<meta property="og:description" content="封装每个对象都包含它能进行操作所需要的所有信息，这个特性称为封装，因此对象不必依赖其他对象来完成自己的操作。  Tips：1.良好的封装能减少耦合。2.类内部的实现可以自由地修改。3.类具有清晰的对外接口。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-26T09:11:33.000Z">
+<meta property="article:modified_time" content="2021-12-10T09:54:54.857Z">
+<meta property="article:author" content="AquiteamoKsq">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/11/26/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>面向对象基础 | AquiteamoKsq Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AquiteamoKsq Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">AquiteamoKsq的个人博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="AquiteamoKsq">
+      <meta itemprop="description" content="Fly me to the Moon...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AquiteamoKsq Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          面向对象基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-26 17:11:33" itemprop="dateCreated datePublished" datetime="2021-11-26T17:11:33+08:00">2021-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-12-10 17:54:54" itemprop="dateModified" datetime="2021-12-10T17:54:54+08:00">2021-12-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">技术学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>每个对象都包含它能进行操作所需要的所有信息，这个特性称为封装，因此对象不必依赖其他对象来完成自己的操作。</p>
+<blockquote>
+<p>Tips：<br>1.良好的封装能减少耦合。<br>2.类内部的实现可以自由地修改。<br>3.类具有清晰的对外接口。  </p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>对象的继承代表了一种”is-a”的关系，如果两个对象A和B，可以描述为’B是A’，则表明B可以继承A。继承者可以理解为是对被继承者的特殊化，因为它除了具备被继承者的特性外，还具备自己独有的个性。</p>
+<p>继承定义了类如何相互关联，共享特性。继承的工作方式是，定义父类和子类，或叫做基类和派生类，其中子类继承父类的所有特性。子类不但继承了父类的所有特性，还可以定义新的特性。</p>
+<blockquote>
+<p>Tips：<br>1.子类拥有父类非private的属性和功能；<br>2.子类具有自己的属性和功能，即子类可以扩展父类没有的属性和功能；<br>3.子类还可以以自己的方式实现父类的功能（方法重写）。  </p>
+</blockquote>
+<p>使用继承的好处：<br>不用继承的话，如果要修改功能，就必须在所有重复的方法中修改，代码越多，出错的可能越大，而继承的优点是，继承使得所有子类公共的部分都放在了父类，使得代码得到了共享，这就避免了重复，另外，继承可使得修改或扩展继承而来的实现都较为容易。</p>
+<p>继承的缺点：<br>1.父类变，子类不得不变;<br>2.继承会破坏包装，父类实现细节暴露给子类。</p>
+<p>继承显然是一种类与类之间强耦合的关系，当两个类之间具备’is-a’的关系时，可以考虑使用继承</p>
+<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><p>多态表示不同的对象可以执行相同的动作，但要通过它们自己的实现代码来执行，其中：<br>1.子类以父类的身份出现；<br>2.子类在工作时以自己的方式实现；<br>3.子类以父类的身份出现时，父类特有的属性和方法不可以使用。</p>
+<p>为了使子类的实例完全接替来自父类的类成员，父类必须将该成员声明为虚拟的。这是通过在该成员的返回类型之前添加<em><strong>virtual</strong></em>关键字来实现。然后，子类可以选择使用<em><strong>Override</strong></em>关键字，将父类实现替换为它自己的实现，这就是方法重写<em><strong>Override</strong></em>.</p>
+<p>多态的原理是当方法被调用时，无论对象是否被转换为其父类，都只有位于对象继承链最末端的方法实现会被调用。也就是说，虚方法是按照其运行时类型而非编译时类型进行动态绑定调用的。</p>
+<h2 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h2><p>抽象类通常代表一个抽象概念，它提供一个继承的出发点，当设计一个新的抽象类时，一定是用来继承的。所以在一个以继承关系形成的等级结构里面，树叶节点应当是具体类，而树枝节点均当时抽象类。抽象类拥有尽可能多的共同代码，拥有尽可能少的数据。</p>
+<blockquote>
+<p>Tips:<br>1.抽象类不能实例化；<br>2.抽象方法是必须被子类重写的方法；<br>3.如果类中包含抽象方法，那么类就必须定义为抽象类，不论是否还包含其他一般方法。  </p>
+</blockquote>
+<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>接口是把隐式公共方法和属性方法组合起来，以封装特定功能的一个集合。一旦类实现了接口，类就可以支持接口所指定的所有属性和成员。声明接口在语法上与声明抽象类完全相同，但不允许提供接口中任何成员的执行方式。实现接口的类就必须要实现接口中的所有属性和方法。</p>
+<p>一个类可以支持多个接口，多个类也可以支持相同的接口。</p>
+<h2 id="抽象类与接口的异同点"><a href="#抽象类与接口的异同点" class="headerlink" title="抽象类与接口的异同点"></a>抽象类与接口的异同点</h2><p>抽象类可以给出一些成员的实现，接口却不包含成员的实现，抽象类的抽象成员可被子类部分实现，接口的成员需要实现类完全是实现，一个类只能继承一个抽象类，但可以实现多个接口。</p>
+<blockquote>
+<p>Tips:<br>1.类是对对象的抽象，抽象类是对类的抽象，接口是对行为的抽象；<br>2.如果行为跨越不同类的对象，可使用接口；对于一些相似的类对象，用继承抽象类；<br>3.从设计角度讲，抽象类是从子类中发现了公共的东西，泛化出父类，然后子类继承父类，而接口是根本不知子类的存在，方法如何实现还不确定，预先定义。  </p>
+</blockquote>
+<h2 id="装箱和拆箱"><a href="#装箱和拆箱" class="headerlink" title="装箱和拆箱"></a>装箱和拆箱</h2><p>装箱就是把值类型打包到object引用类型的一个实例中。</p>
+<p>拆箱就是从对象中提取值类型。</p>
+<p>相对于简单的赋值而言，装箱和拆箱过程需要进行大量的计算。对值类型进行装箱时，必须分配并构造一个全新的对象。其次，拆箱所需的强制转换也需要进行大量的计算。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/10/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" rel="next" title="设计模式--简单工厂模式">
+      设计模式--简单工厂模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E6%89%BF"><span class="nav-number">2.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%80%81"><span class="nav-number">3.</span> <span class="nav-text">多态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">抽象类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">5.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%BC%82%E5%90%8C%E7%82%B9"><span class="nav-number">6.</span> <span class="nav-text">抽象类与接口的异同点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E7%AE%B1%E5%92%8C%E6%8B%86%E7%AE%B1"><span class="nav-number">7.</span> <span class="nav-text">装箱和拆箱</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">AquiteamoKsq</p>
+  <div class="site-description" itemprop="description">Fly me to the Moon...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AquiteamoKsq</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
